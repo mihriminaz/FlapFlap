@@ -25,6 +25,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var bird = SKSpriteNode()
     var repeatActionbird = SKAction()
 
+    var replayBtn = SKSpriteNode()
+
     override func didMove(to view: SKView) {
         createScene()
     }
@@ -42,6 +44,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if birdFell == false {
                 bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
                 bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 80))
+            }
+        }
+
+        for touch in touches{
+            let location = touch.location(in: self)
+            if birdFell == true {
+                if replayBtn.contains(location){
+                    replay()
+                }
             }
         }
     }
@@ -101,6 +112,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
             if birdFell == false{
                 birdFell = true
+                createReplayBtn()
                 self.bird.removeAllActions()
             }
         }
@@ -134,6 +146,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 bg.position = CGPoint(x:bg.position.x + bg.size.width * 2, y:bg.position.y)
             }
         }))
+    }
+
+    func createReplayBtn() {
+        replayBtn = SKSpriteNode(imageNamed: "replay")
+        replayBtn.size = CGSize(width:150, height:150)
+        replayBtn.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2)
+        replayBtn.zPosition = 6
+        replayBtn.setScale(0)
+        self.addChild(replayBtn)
+        replayBtn.run(SKAction.scale(to: 1.0, duration: 0.3))
     }
 
 }
