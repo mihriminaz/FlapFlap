@@ -11,6 +11,7 @@ import GameplayKit
 
 class GameScene: SKScene {
 
+    var gameStarted = Bool(false)
     //BIRD ATLAS
     let birdAtlas = SKTextureAtlas(named:"bird")
     var birdSprites = Array<SKTexture>()
@@ -19,6 +20,13 @@ class GameScene: SKScene {
 
     override func didMove(to view: SKView) {
         createScene()
+    }
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if gameStarted == false {
+            gameStarted =  true
+            self.bird.run(repeatActionbird)
+        }
     }
 
     func createScene(){
