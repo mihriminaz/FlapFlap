@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DB10824E2061721E00116678 /* bird.atlas in Resources */ = {isa = PBXBuildFile; fileRef = DB10824D2061721E00116678 /* bird.atlas */; };
 		DBEEDC8F206159640074CD3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBEEDC8E206159640074CD3A /* AppDelegate.swift */; };
 		DBEEDC91206159640074CD3A /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = DBEEDC90206159640074CD3A /* GameScene.sks */; };
 		DBEEDC93206159640074CD3A /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = DBEEDC92206159640074CD3A /* Actions.sks */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DB10824D2061721E00116678 /* bird.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = bird.atlas; sourceTree = "<group>"; };
 		DBEEDC8B206159640074CD3A /* FlapFlap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlapFlap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBEEDC8E206159640074CD3A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DBEEDC90206159640074CD3A /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				DBEEDC96206159640074CD3A /* GameViewController.swift */,
 				DBEEDC98206159640074CD3A /* Main.storyboard */,
 				DBEEDC9B206159640074CD3A /* Assets.xcassets */,
+				DB10824D2061721E00116678 /* bird.atlas */,
 				DBEEDC9D206159640074CD3A /* LaunchScreen.storyboard */,
 				DBEEDCA0206159640074CD3A /* Info.plist */,
 			);
@@ -241,6 +244,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB10824E2061721E00116678 /* bird.atlas in Resources */,
 				DBEEDC9A206159640074CD3A /* Main.storyboard in Resources */,
 				DBEEDC91206159640074CD3A /* GameScene.sks in Resources */,
 				DBEEDC9C206159640074CD3A /* Assets.xcassets in Resources */,
