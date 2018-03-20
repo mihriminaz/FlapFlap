@@ -9,9 +9,16 @@
 import SpriteKit
 import GameplayKit
 
+struct CollisionBitMask {
+    static let birdCategory:UInt32 = 0x1 << 0
+    static let groundCategory:UInt32 = 0x1 << 3
+}
+
 class GameScene: SKScene, SKPhysicsContactDelegate {
 
     var gameStarted = Bool(false)
+    var birdFell = Bool(false)
+
     //BIRD ATLAS
     let birdAtlas = SKTextureAtlas(named:"bird")
     var birdSprites = Array<SKTexture>()
@@ -30,8 +37,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.bird.run(repeatActionbird)
 
             bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 40))
-        } 
+            bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 80))
+        } else {
+            if birdFell == false {
+                bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+                bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 80))
+            }
+        }
+    }
+
+    func replay(){
+        self.removeAllChildren()
+        self.removeAllActions()
+        birdFell = false
+        gameStarted = false
+        createScene()
     }
 
     func createScene(){
@@ -39,6 +59,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.physicsBody?.isDynamic = false
         self.physicsBody?.affectedByGravity = false
         self.physicsWorld.contactDelegate = self
+
+        self.physicsBody?.categoryBitMask = CollisionBitMask.groundCategory
+        self.physicsBody?.collisionBitMask = CollisionBitMask.birdCategory
+        self.physicsBody?.contactTestBitMask = CollisionBitMask.birdCategory
 
         self.backgroundColor = SKColor(red: 80.0/255.0, green: 192.0/255.0, blue: 203.0/255.0, alpha: 1.0)
 
@@ -66,6 +90,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.repeatActionbird = SKAction.repeatForever(animatebird)
     }
 
+    func didBegin(_ contact: SKPhysicsContact) {
+        let firstBody = contact.bodyA
+        let secondBody = contact.bodyB
+
+        if firstBody.categoryBitMask == CollisionBitMask.birdCategory
+            && secondBody.categoryBitMask == CollisionBitMask.groundCategory
+            || firstBody.categoryBitMask == CollisionBitMask.groundCategory
+            && secondBody.categoryBitMask == CollisionBitMask.birdCategory {
+
+            if birdFell == false{
+                birdFell = true
+                self.bird.removeAllActions()
+            }
+        }
+    }
+
     func createBird() -> SKSpriteNode {
         let bird = SKSpriteNode(texture: SKTextureAtlas(named:"bird").textureNamed("bird1"))
         bird.size = CGSize(width: 100, height: 100)
@@ -76,6 +116,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bird.physicsBody?.restitution = 0
         bird.physicsBody?.affectedByGravity = false
         bird.physicsBody?.isDynamic = true
+
+        bird.physicsBody?.categoryBitMask = CollisionBitMask.birdCategory
+        bird.physicsBody?.collisionBitMask = CollisionBitMask.groundCategory
+        bird.physicsBody?.contactTestBitMask = CollisionBitMask.groundCategory
 
         return bird
     }
