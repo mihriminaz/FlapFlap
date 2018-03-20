@@ -9,7 +9,7 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
 
     var gameStarted = Bool(false)
     //BIRD ATLAS
@@ -30,6 +30,11 @@ class GameScene: SKScene {
     }
 
     func createScene(){
+        self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
+        self.physicsBody?.isDynamic = false
+        self.physicsBody?.affectedByGravity = false
+        self.physicsWorld.contactDelegate = self
+
         self.backgroundColor = SKColor(red: 80.0/255.0, green: 192.0/255.0, blue: 203.0/255.0, alpha: 1.0)
 
         for i in 0..<2 {
@@ -60,6 +65,12 @@ class GameScene: SKScene {
         let bird = SKSpriteNode(texture: SKTextureAtlas(named:"bird").textureNamed("bird1"))
         bird.size = CGSize(width: 100, height: 100)
         bird.position = CGPoint(x:self.frame.midX, y:self.frame.midY)
+
+        bird.physicsBody = SKPhysicsBody(circleOfRadius: bird.size.width / 2)
+        bird.physicsBody?.linearDamping = 1.1
+        bird.physicsBody?.restitution = 0
+        bird.physicsBody?.affectedByGravity = true
+        bird.physicsBody?.isDynamic = true
 
         return bird
     }
