@@ -23,10 +23,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if gameStarted == false {
+        if gameStarted == false{
             gameStarted =  true
+            bird.physicsBody?.affectedByGravity = true
+
             self.bird.run(repeatActionbird)
-        }
+
+            bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+            bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 40))
+        } 
     }
 
     func createScene(){
@@ -69,7 +74,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bird.physicsBody = SKPhysicsBody(circleOfRadius: bird.size.width / 2)
         bird.physicsBody?.linearDamping = 1.1
         bird.physicsBody?.restitution = 0
-        bird.physicsBody?.affectedByGravity = true
+        bird.physicsBody?.affectedByGravity = false
         bird.physicsBody?.isDynamic = true
 
         return bird
