@@ -39,22 +39,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
             self.bird.run(repeatActionbird)
 
+            var elementGenerated: SKSpriteNode?
             let generateGameElements = SKAction.run({
                 () in
-                let foodGenerated = self.createFood()
-                let distance = CGFloat(self.frame.width + foodGenerated.frame.width)
-                let moveFood = SKAction.moveBy(x: -distance - 50, y: 0, duration: TimeInterval(0.008 * distance))
-                let removeFood = SKAction.removeFromParent()
-                let moveAndRemove = SKAction.sequence([moveFood, removeFood])
-                foodGenerated.run(moveAndRemove)
-
-                self.addChild(foodGenerated)
+                elementGenerated = self.createFood()
+                if let foodElement = elementGenerated {
+                    self.addChild(foodElement)
+                    let distance = CGFloat(self.frame.width + foodElement.frame.width)
+                    let movePipes = SKAction.moveBy(x: -distance - 50, y: 0, duration: TimeInterval(0.008 * distance))
+                    let removePipes = SKAction.removeFromParent()
+                    let moveAndRemove = SKAction.sequence([movePipes, removePipes])
+                    foodElement.run(moveAndRemove)
+                }
             })
 
             let delay = SKAction.wait(forDuration: 1.5)
-            let generationDelay = SKAction.sequence([generateGameElements, delay])
-            let generationDelayForever = SKAction.repeatForever(generationDelay)
-            self.run(generationDelayForever)
+            let SpawnDelay = SKAction.sequence([generateGameElements, delay])
+            let spawnDelayForever = SKAction.repeatForever(SpawnDelay)
+            self.run(spawnDelayForever)
             bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
             bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 80))
         } else {
@@ -154,7 +156,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func createFood() -> SKSpriteNode {
         let avocadoNode = SKSpriteNode(imageNamed: "avocado")
         avocadoNode.size = CGSize(width: 40, height: 40)
-        avocadoNode.position = CGPoint(x: self.frame.width + 25, y: self.frame.height / 2)
+        avocadoNode.position = CGPoint(x: self.frame.width + 25, y: self.frame.height / 2 + 50)
         avocadoNode.physicsBody = SKPhysicsBody(rectangleOf: avocadoNode.size)
         avocadoNode.physicsBody?.affectedByGravity = false
         avocadoNode.physicsBody?.isDynamic = false
@@ -167,14 +169,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
-        enumerateChildNodes(withName: "background", using: ({
+        if gameStarted || !birdFell {
+            enumerateChildNodes(withName: "background", using: ({
             (node, error) in
-            let bg = node as! SKSpriteNode
-            bg.position = CGPoint(x: bg.position.x - 2, y: bg.position.y)
-            if bg.position.x <= -bg.size.width {
-                bg.position = CGPoint(x:bg.position.x + bg.size.width * 2, y:bg.position.y)
-            }
-        }))
+                let bg = node as! SKSpriteNode
+                bg.position = CGPoint(x: bg.position.x - 2, y: bg.position.y)
+                if bg.position.x <= -bg.size.width {
+                    bg.position = CGPoint(x:bg.position.x + bg.size.width * 2, y:bg.position.y)
+                }
+            }))
+        }
     }
 
     func createReplayBtn() {
