@@ -11,7 +11,8 @@ import GameplayKit
 
 struct CollisionBitMask {
     static let birdCategory:UInt32 = 0x1 << 0
-    static let groundCategory:UInt32 = 0x1 << 3
+    static let groundCategory:UInt32 = 0x1 << 1
+    static let foodCategory:UInt32 = 0x1 << 2
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
@@ -38,6 +39,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
             self.bird.run(repeatActionbird)
 
+            let generateGameElements = SKAction.run({
+                () in
+                let foodGenerated = self.createFood()
+                let distance = CGFloat(self.frame.width + foodGenerated.frame.width)
+                let moveFood = SKAction.moveBy(x: -distance - 50, y: 0, duration: TimeInterval(0.008 * distance))
+                let removeFood = SKAction.removeFromParent()
+                let moveAndRemove = SKAction.sequence([moveFood, removeFood])
+                foodGenerated.run(moveAndRemove)
+
+                self.addChild(foodGenerated)
+            })
+
+            let delay = SKAction.wait(forDuration: 1.5)
+            let generationDelay = SKAction.sequence([generateGameElements, delay])
+            let generationDelayForever = SKAction.repeatForever(generationDelay)
+            self.run(generationDelayForever)
             bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
             bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 80))
         } else {
@@ -67,13 +84,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     func createScene(){
         self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
-        self.physicsBody?.isDynamic = false
-        self.physicsBody?.affectedByGravity = false
-        self.physicsWorld.contactDelegate = self
-
         self.physicsBody?.categoryBitMask = CollisionBitMask.groundCategory
         self.physicsBody?.collisionBitMask = CollisionBitMask.birdCategory
         self.physicsBody?.contactTestBitMask = CollisionBitMask.birdCategory
+        self.physicsBody?.isDynamic = false
+        self.physicsBody?.affectedByGravity = false
+        self.physicsWorld.contactDelegate = self
 
         self.backgroundColor = SKColor(red: 80.0/255.0, green: 192.0/255.0, blue: 203.0/255.0, alpha: 1.0)
 
@@ -126,16 +142,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bird.physicsBody = SKPhysicsBody(circleOfRadius: bird.size.width / 2)
         bird.physicsBody?.linearDamping = 1.1
         bird.physicsBody?.restitution = 0
-        bird.physicsBody?.affectedByGravity = false
-        bird.physicsBody?.isDynamic = true
-
         bird.physicsBody?.categoryBitMask = CollisionBitMask.birdCategory
         bird.physicsBody?.collisionBitMask = CollisionBitMask.groundCategory
-        bird.physicsBody?.contactTestBitMask = CollisionBitMask.groundCategory
+        bird.physicsBody?.contactTestBitMask = CollisionBitMask.groundCategory | CollisionBitMask.foodCategory
+        bird.physicsBody?.affectedByGravity = false
+        bird.physicsBody?.isDynamic = true
 
         return bird
     }
 
+    func createFood() -> SKSpriteNode {
+        let avocadoNode = SKSpriteNode(imageNamed: "avocado")
+        avocadoNode.size = CGSize(width: 40, height: 40)
+        avocadoNode.position = CGPoint(x: self.frame.width + 25, y: self.frame.height / 2)
+        avocadoNode.physicsBody = SKPhysicsBody(rectangleOf: avocadoNode.size)
+        avocadoNode.physicsBody?.affectedByGravity = false
+        avocadoNode.physicsBody?.isDynamic = false
+        avocadoNode.physicsBody?.categoryBitMask = CollisionBitMask.foodCategory
+        avocadoNode.physicsBody?.collisionBitMask = 0
+        avocadoNode.physicsBody?.contactTestBitMask = CollisionBitMask.birdCategory
+        avocadoNode.color = SKColor.blue
+
+        return avocadoNode
+    }
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
         enumerateChildNodes(withName: "background", using: ({
