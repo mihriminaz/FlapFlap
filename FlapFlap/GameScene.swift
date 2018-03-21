@@ -20,6 +20,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var gameStarted = Bool(false)
     var birdFell = Bool(false)
 
+    var score = Int(0)
+    var scoreLbl = SKLabelNode()
+
     //BIRD ATLAS
     let birdAtlas = SKTextureAtlas(named:"bird")
     var birdSprites = Array<SKTexture>()
@@ -81,6 +84,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.removeAllActions()
         birdFell = false
         gameStarted = false
+        score = 0
         createScene()
     }
 
@@ -117,6 +121,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //ANIMATE THE BIRD AND REPEAT THE ANIMATION FOREVER
         let animatebird = SKAction.animate(with: self.birdSprites, timePerFrame: 0.1)
         self.repeatActionbird = SKAction.repeatForever(animatebird)
+
+        scoreLbl = createScoreLabel()
+        self.addChild(scoreLbl)
     }
 
     func didBegin(_ contact: SKPhysicsContact) {
@@ -133,6 +140,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 createReplayBtn()
                 self.bird.removeAllActions()
             }
+        } else if firstBody.categoryBitMask == CollisionBitMask.birdCategory && secondBody.categoryBitMask == CollisionBitMask.foodCategory
+        || firstBody.categoryBitMask == CollisionBitMask.foodCategory && secondBody.categoryBitMask == CollisionBitMask.birdCategory {
+            score += 1
+            scoreLbl.text = "\(score)"
+            firstBody.categoryBitMask == CollisionBitMask.birdCategory ? secondBody.node?.removeFromParent() : firstBody.node?.removeFromParent()
         }
     }
 
@@ -167,6 +179,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         return avocadoNode
     }
+
+    func createScoreLabel() -> SKLabelNode {
+        let scoreLbl = SKLabelNode()
+        scoreLbl.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2 + self.frame.height / 2.6)
+        scoreLbl.text = "\(score)"
+        scoreLbl.zPosition = 10
+        scoreLbl.fontSize = 40
+        scoreLbl.fontColor = UIColor.red
+        return scoreLbl
+    }
+
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
         if gameStarted || !birdFell {
