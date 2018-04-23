@@ -13,6 +13,7 @@ struct CollisionBitMask {
     static let birdCategory:UInt32 = 0x1 << 0
     static let groundCategory:UInt32 = 0x1 << 1
     static let foodCategory:UInt32 = 0x1 << 2
+    static let pipeCategory:UInt32 = 0x1 << 3
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
@@ -22,6 +23,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     var score = Int(0)
     var scoreLbl = SKLabelNode()
+    var wholePipe = SKNode()
+    var moveAndRemove = SKAction()
 
     //BIRD ATLAS
     let birdAtlas = SKTextureAtlas(named:"bird")
@@ -41,25 +44,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             bird.physicsBody?.affectedByGravity = true
 
             self.bird.run(repeatActionbird)
-
-            var elementGenerated: SKSpriteNode?
+            
             let generateGameElements = SKAction.run({
                 () in
-                elementGenerated = self.createFood()
-                if let foodElement = elementGenerated {
-                    self.addChild(foodElement)
-                    let distance = CGFloat(self.frame.width + foodElement.frame.width)
-                    let movePipes = SKAction.moveBy(x: -distance - 50, y: 0, duration: TimeInterval(0.008 * distance))
-                    let removePipes = SKAction.removeFromParent()
-                    let moveAndRemove = SKAction.sequence([movePipes, removePipes])
-                    foodElement.run(moveAndRemove)
-                }
+                self.wholePipe = self.createPipes()
+                self.addChild(self.wholePipe)
             })
 
             let delay = SKAction.wait(forDuration: 1.5)
             let SpawnDelay = SKAction.sequence([generateGameElements, delay])
             let spawnDelayForever = SKAction.repeatForever(SpawnDelay)
             self.run(spawnDelayForever)
+            
+            let distance = CGFloat(self.frame.width + wholePipe.frame.width)
+            let movePipes = SKAction.moveBy(x: -distance - 50, y: 0, duration: TimeInterval(0.008 * distance))
+            let removePipes = SKAction.removeFromParent()
+            moveAndRemove = SKAction.sequence([movePipes, removePipes])
+            
             bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
             bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 80))
         } else {
@@ -148,48 +149,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
-    func createBird() -> SKSpriteNode {
-        let bird = SKSpriteNode(texture: SKTextureAtlas(named:"bird").textureNamed("bird1"))
-        bird.size = CGSize(width: 100, height: 100)
-        bird.position = CGPoint(x:self.frame.midX, y:self.frame.midY)
-
-        bird.physicsBody = SKPhysicsBody(circleOfRadius: bird.size.width / 2)
-        bird.physicsBody?.linearDamping = 1.1
-        bird.physicsBody?.restitution = 0
-        bird.physicsBody?.categoryBitMask = CollisionBitMask.birdCategory
-        bird.physicsBody?.collisionBitMask = CollisionBitMask.groundCategory
-        bird.physicsBody?.contactTestBitMask = CollisionBitMask.groundCategory | CollisionBitMask.foodCategory
-        bird.physicsBody?.affectedByGravity = false
-        bird.physicsBody?.isDynamic = true
-
-        return bird
-    }
-
-    func createFood() -> SKSpriteNode {
-        let avocadoNode = SKSpriteNode(imageNamed: "avocado")
-        avocadoNode.size = CGSize(width: 40, height: 40)
-        avocadoNode.position = CGPoint(x: self.frame.width + 25, y: self.frame.height / 2 + 50)
-        avocadoNode.physicsBody = SKPhysicsBody(rectangleOf: avocadoNode.size)
-        avocadoNode.physicsBody?.affectedByGravity = false
-        avocadoNode.physicsBody?.isDynamic = false
-        avocadoNode.physicsBody?.categoryBitMask = CollisionBitMask.foodCategory
-        avocadoNode.physicsBody?.collisionBitMask = 0
-        avocadoNode.physicsBody?.contactTestBitMask = CollisionBitMask.birdCategory
-        avocadoNode.color = SKColor.blue
-
-        return avocadoNode
-    }
-
-    func createScoreLabel() -> SKLabelNode {
-        let scoreLbl = SKLabelNode()
-        scoreLbl.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2 + self.frame.height / 2.6)
-        scoreLbl.text = "\(score)"
-        scoreLbl.zPosition = 10
-        scoreLbl.fontSize = 40
-        scoreLbl.fontColor = UIColor.red
-        return scoreLbl
-    }
-
+   
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
         if gameStarted || !birdFell {
@@ -203,15 +163,5 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }))
         }
     }
-
-    func createReplayBtn() {
-        replayBtn = SKSpriteNode(imageNamed: "replay")
-        replayBtn.size = CGSize(width:150, height:150)
-        replayBtn.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2)
-        replayBtn.zPosition = 6
-        replayBtn.setScale(0)
-        self.addChild(replayBtn)
-        replayBtn.run(SKAction.scale(to: 1.0, duration: 0.3))
-    }
-
+    
 }

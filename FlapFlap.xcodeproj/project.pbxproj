@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1985651F208E890D0046C9EF /* GameInstances.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1985651E208E890D0046C9EF /* GameInstances.swift */; };
 		DB10824E2061721E00116678 /* bird.atlas in Resources */ = {isa = PBXBuildFile; fileRef = DB10824D2061721E00116678 /* bird.atlas */; };
 		DBEEDC8F206159640074CD3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBEEDC8E206159640074CD3A /* AppDelegate.swift */; };
 		DBEEDC91206159640074CD3A /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = DBEEDC90206159640074CD3A /* GameScene.sks */; };
@@ -38,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1985651E208E890D0046C9EF /* GameInstances.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameInstances.swift; sourceTree = "<group>"; };
 		DB10824D2061721E00116678 /* bird.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = bird.atlas; sourceTree = "<group>"; };
 		DBEEDC8B206159640074CD3A /* FlapFlap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlapFlap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBEEDC8E206159640074CD3A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -82,6 +84,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		19856520208E89D20046C9EF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				DB10824D2061721E00116678 /* bird.atlas */,
+				DBEEDC9B206159640074CD3A /* Assets.xcassets */,
+				DBEEDC92206159640074CD3A /* Actions.sks */,
+				DBEEDC90206159640074CD3A /* GameScene.sks */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		DBEEDC82206159630074CD3A = {
 			isa = PBXGroup;
 			children = (
@@ -106,13 +119,11 @@
 			isa = PBXGroup;
 			children = (
 				DBEEDC8E206159640074CD3A /* AppDelegate.swift */,
-				DBEEDC90206159640074CD3A /* GameScene.sks */,
-				DBEEDC92206159640074CD3A /* Actions.sks */,
 				DBEEDC94206159640074CD3A /* GameScene.swift */,
+				1985651E208E890D0046C9EF /* GameInstances.swift */,
 				DBEEDC96206159640074CD3A /* GameViewController.swift */,
 				DBEEDC98206159640074CD3A /* Main.storyboard */,
-				DBEEDC9B206159640074CD3A /* Assets.xcassets */,
-				DB10824D2061721E00116678 /* bird.atlas */,
+				19856520208E89D20046C9EF /* Resources */,
 				DBEEDC9D206159640074CD3A /* LaunchScreen.storyboard */,
 				DBEEDCA0206159640074CD3A /* Info.plist */,
 			);
@@ -274,6 +285,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1985651F208E890D0046C9EF /* GameInstances.swift in Sources */,
 				DBEEDC95206159640074CD3A /* GameScene.swift in Sources */,
 				DBEEDC97206159640074CD3A /* GameViewController.swift in Sources */,
 				DBEEDC8F206159640074CD3A /* AppDelegate.swift in Sources */,
