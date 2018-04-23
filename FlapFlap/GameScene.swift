@@ -22,7 +22,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var birdFell = Bool(false)
 
     var score = Int(0)
+    var topScote = Int(0)
     var scoreLbl = SKLabelNode()
+    var topScoreLbl = SKLabelNode()
     var wholePipe = SKNode()
     var moveAndRemove = SKAction()
 
@@ -62,11 +64,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             moveAndRemove = SKAction.sequence([movePipes, removePipes])
             
             bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 80))
+            bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 120))
         } else {
             if birdFell == false {
                 bird.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 80))
+                bird.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 120))
             }
         }
 
@@ -74,6 +76,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let location = touch.location(in: self)
             if birdFell == true {
                 if replayBtn.contains(location){
+                    if UserDefaults.standard.object(forKey: "topScore") != nil {
+                        let hscore = UserDefaults.standard.integer(forKey: "topScore")
+                        if hscore < Int(scoreLbl.text!)!{
+                            UserDefaults.standard.set(scoreLbl.text, forKey: "topScore")
+                        }
+                    } else {
+                        UserDefaults.standard.set(0, forKey: "topScore")
+                    }
+                    
                     replay()
                 }
             }
@@ -125,6 +136,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         scoreLbl = createScoreLabel()
         self.addChild(scoreLbl)
+        topScoreLbl = createTopScoreLabel()
+        self.addChild(topScoreLbl)
     }
 
     func didBegin(_ contact: SKPhysicsContact) {
@@ -160,7 +173,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
    
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
-        if gameStarted || !birdFell {
+        if gameStarted && birdFell == false {
             enumerateChildNodes(withName: "background", using: ({
             (node, error) in
                 let bg = node as! SKSpriteNode

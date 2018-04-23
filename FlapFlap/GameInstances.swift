@@ -12,7 +12,7 @@ extension GameScene {
     
     func createBird() -> SKSpriteNode {
         let bird = SKSpriteNode(texture: SKTextureAtlas(named:"bird").textureNamed("bird1"))
-        bird.size = CGSize(width: 100, height: 100)
+        bird.size = CGSize(width: 80, height: 80)
         bird.position = CGPoint(x:self.frame.midX, y:self.frame.midY)
         
         bird.physicsBody = SKPhysicsBody(circleOfRadius: bird.size.width / 2)
@@ -53,6 +53,21 @@ extension GameScene {
         scoreLbl.fontSize = 40
         scoreLbl.fontColor = UIColor.red
         return scoreLbl
+    }
+    
+    func createTopScoreLabel() -> SKLabelNode {
+        let topScoreLbl = SKLabelNode()
+        topScoreLbl.position = CGPoint(x: 40, y: 10)
+        if let topScoreValue = UserDefaults.standard.object(forKey: "topScore"){
+            topScoreLbl.text = "Top Score: \(topScoreValue)"
+        } else {
+            topScoreLbl.text = "Top Score: 0"
+        }
+        
+        topScoreLbl.zPosition = 10
+        topScoreLbl.fontSize = 10
+        topScoreLbl.fontColor = UIColor.purple
+        return topScoreLbl
     }
     
     func createReplayBtn() {
