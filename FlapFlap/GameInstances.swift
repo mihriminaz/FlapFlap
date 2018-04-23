@@ -19,8 +19,9 @@ extension GameScene {
         bird.physicsBody?.linearDamping = 1.1
         bird.physicsBody?.restitution = 0
         bird.physicsBody?.categoryBitMask = CollisionBitMask.birdCategory
-        bird.physicsBody?.collisionBitMask = CollisionBitMask.groundCategory
-        bird.physicsBody?.contactTestBitMask = CollisionBitMask.groundCategory | CollisionBitMask.foodCategory
+        bird.physicsBody?.collisionBitMask = CollisionBitMask.groundCategory | CollisionBitMask.pipeCategory
+        bird.physicsBody?.contactTestBitMask = CollisionBitMask.groundCategory | CollisionBitMask.foodCategory | CollisionBitMask.pipeCategory
+    
         bird.physicsBody?.affectedByGravity = false
         bird.physicsBody?.isDynamic = true
         bird.zPosition = 7
