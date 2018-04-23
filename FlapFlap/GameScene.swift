@@ -134,8 +134,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if firstBody.categoryBitMask == CollisionBitMask.birdCategory
             && secondBody.categoryBitMask == CollisionBitMask.groundCategory
             || firstBody.categoryBitMask == CollisionBitMask.groundCategory
-            && secondBody.categoryBitMask == CollisionBitMask.birdCategory {
+            && secondBody.categoryBitMask == CollisionBitMask.birdCategory
+            || firstBody.categoryBitMask == CollisionBitMask.birdCategory && secondBody.categoryBitMask == CollisionBitMask.pipeCategory
+            || firstBody.categoryBitMask == CollisionBitMask.pipeCategory && secondBody.categoryBitMask == CollisionBitMask.birdCategory {
 
+            enumerateChildNodes(withName: "wholePipe", using: ({
+                (node, error) in
+                node.speed = 0
+                self.removeAllActions()
+            }))
+            
             if birdFell == false{
                 birdFell = true
                 createReplayBtn()
