@@ -16,8 +16,8 @@ extension GameScene {
         bird.position = CGPoint(x:self.frame.midX, y:self.frame.midY)
         
         bird.physicsBody = SKPhysicsBody(circleOfRadius: bird.size.width / 2)
-        bird.physicsBody?.linearDamping = 1.1
-        bird.physicsBody?.restitution = 0
+        bird.physicsBody?.linearDamping = 0.7
+        bird.physicsBody?.restitution = 0.2
         bird.physicsBody?.categoryBitMask = CollisionBitMask.birdCategory
         bird.physicsBody?.collisionBitMask = CollisionBitMask.groundCategory | CollisionBitMask.pipeCategory
         bird.physicsBody?.contactTestBitMask = CollisionBitMask.groundCategory | CollisionBitMask.foodCategory | CollisionBitMask.pipeCategory
